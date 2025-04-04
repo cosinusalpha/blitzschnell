@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "blitzschnell"
+version = "0.1.0"
+description = "A fast Python library"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Your Name", email = "your.email@example.com" }]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[project.optional-dependencies]
+plotting = ["matplotlib>=3.5.0"]
+dev = ["ruff>=0.0.292", "mypy>=1.5.0"]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/blitzschnell"
+"Bug Tracker" = "https://github.com/yourusername/blitzschnell/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/blitzschnell"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/blitzschnell/py.typed" = "blitzschnell/py.typed"
+
+[tool.ruff]
+target-version = "py39"
+
+[tool.mypy]
+python_version = "3.9"
