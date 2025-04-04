@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "blitzschnell"
-version = "0.1.0"
+version = "0.1.1"
 description = "A fast Python library"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "Your Name", email = "your.email@example.com" }]
+authors = [{ name = "cosinusalpha", email = "cvwhb6fjb@mozmail.com" }]
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -26,8 +26,8 @@ plotting = ["matplotlib>=3.5.0"]
 dev = ["ruff>=0.0.292", "mypy>=1.5.0"]
 
 [project.urls]
-"Homepage" = "https://github.com/yourusername/blitzschnell"
-"Bug Tracker" = "https://github.com/yourusername/blitzschnell/issues"
+"Homepage" = "https://github.com/cosinusalpha/blitzschnell"
+"Bug Tracker" = "https://github.com/cosinusalpha/blitzschnell/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/blitzschnell"]
