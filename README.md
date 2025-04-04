@@ -19,7 +19,17 @@ Instead of hardcoding these values or guessing, **BlitzSchnell** optimizes them 
 
 ## Installation
 
-No external dependencies required! Simply copy the `blitzschnell.py` file to your project.
+BlitzSchnell is available on PyPI and can be installed using pip:
+
+```bash
+pip install blitzschnell
+```
+
+If you want Matplotlib support for visualization, you can install it with:
+
+```bash
+pip install blitzschnell[plotting]
+```
 
 ```python
 # You can rename it to better fit your project
