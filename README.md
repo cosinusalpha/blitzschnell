@@ -1,13 +1,13 @@
-# BlitzSchnell
+# ⚡ BlitzSchnell
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.9+-blue.svg" alt="Python Version">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
 </p>
 
-**BlitzSchnell** is a Python library for automatic performance optimization of common parameters like thread counts, batch sizes, chunk sizes, and timeouts. It eliminates the guesswork from performance tuning by automatically adapting these parameters at runtime based on measured performance.
+**⚡ BlitzSchnell** is a Python library for automatic performance optimization of common parameters like thread counts, batch sizes, chunk sizes, and timeouts. It eliminates the guesswork from performance tuning by automatically adapting these parameters at runtime based on measured performance.
 
-## Why BlitzSchnell?
+## Why ⚡ BlitzSchnell?
 
 Have you ever asked yourself:
 
@@ -15,11 +15,11 @@ Have you ever asked yourself:
 - "What batch size will give the best performance?"
 - "How big should my read buffer be?"
 
-Instead of hardcoding these values or guessing, **BlitzSchnell** optimizes them dynamically as your code runs based on actual measured performance.
+Instead of hardcoding these values or guessing, **⚡ BlitzSchnell** optimizes them dynamically as your code runs based on actual measured performance.
 
 ## Installation
 
-BlitzSchnell is available on PyPI and can be installed using pip:
+⚡ BlitzSchnell is available on PyPI and can be installed using pip:
 
 ```bash
 pip install blitzschnell
@@ -38,12 +38,19 @@ from blitzschnell import OptimalParameter, OptimalBatchProcessor, OptimalThreadP
 
 ## Core Concepts
 
-BlitzSchnell uses **line search optimization** (golden section search) to automatically find optimal parameter values. It:
+⚡ BlitzSchnell uses **line search optimization** (golden section search) to automatically find optimal parameter values. It:
 
 1. Measures the performance of your code with different parameter values
 2. Adapts parameters to maximize performance
 3. Handles noise in measurements with various filtering strategies
 4. Continues to adapt as your workload changes
+
+## Troubleshooting
+
+The optimizer works, but if you find that it doesn't seem to be optimizing correctly, one of the following might be the reason:
+
+1. The noise handling strategy might be too aggressive or not aggressive enough. Try experimenting with different noise handling strategies, starting with `noise_handling="none"`.
+2. Turn off exploration by setting `exploration_factor=0.0`. This will make the optimizer use only the current best value. The exploration factor is generally intended to help the optimizer escape local optima, but it can lead to suboptimal performance if the local optimum is actually the global optimum.
 
 ## Examples
 
@@ -444,7 +451,7 @@ print(f"Optimal chunk size: {chunk_size.value()}")
 
 ### Handling Noisy Measurements
 
-BlitzSchnell provides several strategies to handle noise in performance measurements:
+⚡ BlitzSchnell provides several strategies to handle noise in performance measurements:
 
 ```python
 # Create a parameter with noise handling
@@ -481,7 +488,7 @@ print(f"Performance stats: {summary['performance_stats']}")
 
 ## How It Works
 
-BlitzSchnell uses **golden section search** (a form of line search optimization) to efficiently find optimal parameter values by methodically narrowing down the search interval. For multiple parameters, it uses **coordinate descent**, optimizing one parameter at a time.
+⚡ BlitzSchnell uses **golden section search** (a form of line search optimization) to efficiently find optimal parameter values by methodically narrowing down the search interval. For multiple parameters, it uses **coordinate descent**, optimizing one parameter at a time.
 
 Key features:
 
