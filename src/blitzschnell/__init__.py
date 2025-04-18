@@ -179,6 +179,81 @@ class OptimalParameter:
         self.start_time = None
         return elapsed_time
 
+    def signal_exception(self) -> None:
+        """Signal an exception during measurement and adjust bounds.
+        Assume failure means the current value is too high (common case for resource limits)
+        If c failed, new interval is [a, c] -> update b
+        If d failed, new interval is [a, d] -> update b
+        If initial value failed, new interval is [a, initial_value] -> update b
+        If exploration failed, new interval is [a, explored_value] -> update b
+        """
+        if self.start_time is None:
+            raise ValueError("start_measure() must be called before signal_exception()")
+
+        current_value = self.value()
+        _original_bounds = (self.a, self.b)
+        tolerance = 1e-9
+
+        needs_bound_update = False
+        if self.phase == 0 and abs(current_value - self.c) < tolerance:
+            self.b = current_value
+            needs_bound_update = True
+            print(f"Exception at c ({current_value:.4f}). Setting upper bound.")
+        elif self.phase == 1 and abs(current_value - self.d) < tolerance:
+            self.b = current_value
+            needs_bound_update = True
+            print(f"Exception at d ({current_value:.4f}). Setting upper bound.")
+        elif (
+            self.measurement_count < self.warmup_count
+            and abs(current_value - self.initial_value) < tolerance
+        ):
+            self.b = current_value
+            needs_bound_update = True
+            print(
+                f"Exception at initial value ({current_value:.4f}). Setting upper bound."
+            )
+        elif random.random() < self.exploration_factor:
+            if not (
+                abs(current_value - self.c) < tolerance
+                or abs(current_value - self.d) < tolerance
+            ):
+                self.b = current_value
+                needs_bound_update = True
+
+        if not needs_bound_update:
+            self.b = current_value
+            needs_bound_update = True
+
+        self.a = max(self.min_value, self.a)
+        self.b = min(self.max_value, self.b)
+
+        if self.a >= self.b:
+            if abs(self.a - self.b) < tolerance:
+                nudge = tolerance * 10  # A small nudge value
+                if self.b > self.min_value:
+                    self.b = max(self.min_value, self.b - nudge)
+                elif self.a < self.max_value:
+                    self.a = max(self.min_value, self.a - nudge)
+
+            if self.a >= self.b:
+                raise ValueError(
+                    f"Bounds have collapsed or inverted ({self.a} >= {self.b}) after exception at {current_value}; no valid range remains."
+                )
+
+        if self.b > self.a:
+            self.c = self.b - (self.b - self.a) / self.golden_ratio
+            self.d = self.a + (self.b - self.a) / self.golden_ratio
+        else:
+            self.c = self.a
+            self.d = self.b
+
+        self.fc = None
+        self.fd = None
+        self.phase = 0
+
+        self.measurement_count += 1
+        self.start_time = None
+
     def _optimize(self, current_value: float, performance: float) -> None:
         """Optimize the parameter value based on the measured performance."""
         # Golden Section Search for single parameter optimization

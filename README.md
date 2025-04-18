@@ -54,7 +54,56 @@ The optimizer works, but if you find that it doesn't seem to be optimizing corre
 
 ## Examples
 
-### 1. Basic Usage: Optimizing a Batch Size
+### 0. Basic Example
+
+```python
+from blitzschnell import OptimalParameter
+import time
+
+# Simulate a function with a known minimum at x=300
+def opt_function(x: int) -> None:
+    time.sleep(0.0001 * abs(x - 300))
+
+# Optimize size
+batch_size = OptimalParameter(5000, min_value=0, max_value=10000, noise_handling="none", exploration_factor=0)
+
+for _ in range(100):
+    size = int(batch_size.value())
+    batch_size.start_measure()
+    opt_function(size)
+    batch_size.end_measure()
+
+print(f"Optimal size: {batch_size.value()}")
+```
+
+### 1. Basic Example with Exception Handling
+
+```python
+from blitzschnell import OptimalParameter
+import time
+
+def opt_function(x: int) -> None:
+    """Simulate work with a known minimum at x=300."""
+    if x > 2000:
+        raise ValueError("x too large")
+    time.sleep(0.0001 * abs(x - 300))
+
+batch_size = OptimalParameter(5000, min_value=1, max_value=10000, noise_handling="none", exploration_factor=0)
+
+for _ in range(100):
+    size = int(batch_size.value())
+    batch_size.start_measure()
+    try:
+        opt_function(size)
+        batch_size.end_measure()
+    except ValueError as e:
+        print(f"Error: {e}")
+        batch_size.signal_exception()
+
+print(f"Optimal batch size: {batch_size.value()}")
+```
+
+### 2. Basic Usage: Optimizing a Batch Size
 
 ```python
 from blitzschnell import OptimalParameter
@@ -92,7 +141,7 @@ summary = batch_size.get_summary()
 print(f"Best batch size: {summary['best_value']}")
 ```
 
-### 2. Batch Processing with Automatic Optimization
+### 3. Batch Processing with Automatic Optimization
 
 ```python
 from blitzschnell import OptimalBatchProcessor
@@ -119,7 +168,7 @@ print(f"Processed {len(results)} items")
 print(f"Optimal batch size: {batch_processor.batch_size.value()}")
 ```
 
-### 3. Optimal Thread Pool
+### 4. Optimal Thread Pool
 
 ```python
 from blitzschnell import OptimalThreadPool
@@ -152,7 +201,7 @@ finally:
     thread_pool.shutdown()
 ```
 
-### 4. Optimal Process Pool for CPU-Bound Tasks
+### 5. Optimal Process Pool for CPU-Bound Tasks
 
 ```python
 from blitzschnell import OptimalProcessPool
@@ -183,7 +232,7 @@ finally:
     process_pool.shutdown()
 ```
 
-### 5. Optimal File Reading
+### 6. Optimal File Reading
 
 ```python
 from blitzschnell import OptimalFileReader
@@ -219,7 +268,7 @@ print(f"Optimal chunk size: {file_reader.chunk_size.value()} bytes")
 os.remove("large_file.txt")
 ```
 
-### 6. Chunk Processing with Optimal Chunk Sizes
+### 7. Chunk Processing with Optimal Chunk Sizes
 
 ```python
 from blitzschnell import OptimalChunkProcessor
@@ -252,7 +301,7 @@ def process_with_index(idx, item):
 indexed_results = chunk_processor.enumerate(items, process_with_index)
 ```
 
-### 7. Hybrid Thread/Process Pool
+### 8. Hybrid Thread/Process Pool
 
 ```python
 from blitzschnell import HybridPool
@@ -291,7 +340,7 @@ finally:
     hybrid_pool.shutdown()
 ```
 
-### 8. Multi-Parameter Optimization (Thread Count + Batch Size)
+### 9. Multi-Parameter Optimization (Thread Count + Batch Size)
 
 ```python
 from blitzschnell import OptimalBatchThreadPool
@@ -334,7 +383,7 @@ finally:
     batch_thread_pool.shutdown()
 ```
 
-### 9. Multiple Parameter Optimization
+### 10. Multiple Parameter Optimization
 
 ```python
 from blitzschnell import MultiLineSearchOptimizer
@@ -387,7 +436,7 @@ for param, value in best_values.items():
 optimizer.plot_history()
 ```
 
-### 10. Adaptive Timeouts
+### 11. Adaptive Timeouts
 
 ```python
 from blitzschnell import AdaptiveTimeout
@@ -425,7 +474,7 @@ summary = timeout_handler.get_summary()
 print(f"Optimal timeout: {summary['best_value']:.2f}s")
 ```
 
-### 11. Using the Context Manager for Simple Performance Measurement
+### 12. Using the Context Manager for Simple Performance Measurement
 
 ```python
 from blitzschnell import OptimalParameter
